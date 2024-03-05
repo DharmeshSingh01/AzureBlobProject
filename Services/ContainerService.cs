@@ -1,5 +1,6 @@
 ﻿
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace AzureBlobProject.Services
 {
@@ -11,14 +12,16 @@ namespace AzureBlobProject.Services
         {
             _blobClient = blobServiceClient;
         }
-        public Task CreateConatinerAsync(string containerName)
+        public async Task CreateConatinerAsync(string containerName)
         {
-            throw new NotImplementedException();
+            BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
+            await blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
         }
 
-        public Task DeleteContainerAsync(string containerName)
+        public async Task DeleteContainerAsync(string containerName)
         {
-            throw new NotImplementedException();
+            BlobContainerClient blobContainerClient=_blobClient.GetBlobContainerClient(containerName);
+            await blobContainerClient.DeleteIfExistsAsync();
         }
 
         public Task<List<string>> GetAllContainersAndBlobAsync()
@@ -26,9 +29,14 @@ namespace AzureBlobProject.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<string>> GetAllContainersAsync()
+        public async Task<List<string>> GetAllContainersAsync()
         {
-            throw new NotImplementedException();
+            List<String> containerName = new();
+            await foreach(BlobContainerItem blobContainerItem in _blobClient.GetBlobContainersAsync())
+            {
+                containerName.Add(blobContainerItem.Name);
+            }
+            return containerName;
         }
     }
 }

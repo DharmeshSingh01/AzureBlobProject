@@ -31,7 +31,19 @@ namespace AzureBlobProject.Controllers
 
             var fileName=Path.GetFileNameWithoutExtension(file.FileName)+"_"+ Guid.NewGuid()+ Path.GetExtension(file.FileName);
            var a= await _blobService.UploadBlobAsync(fileName, file,containerName);
-            return RedirectToAction(nameof(Manage));
+            // return RedirectToAction(nameof(Manage);
+            return RedirectToAction("Manage",  new { containerName = containerName });
+            
+        }
+        public async Task<IActionResult> DeleteFile( string name, string containerName)
+        {
+            await _blobService.DeleteBlobAsync(name, containerName);
+            //  return RedirectToAction(nameof(Manage));
+            return RedirectToAction("Manage", new { containerName = containerName });
+        }
+        public async Task<IActionResult> ViewFile(string name, string containerName)
+        {
+            return Redirect(await _blobService.GetBlob(name, containerName));
         }
     }
 

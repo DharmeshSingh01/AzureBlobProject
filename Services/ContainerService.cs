@@ -24,9 +24,24 @@ namespace AzureBlobProject.Services
             await blobContainerClient.DeleteIfExistsAsync();
         }
 
-        public Task<List<string>> GetAllContainersAndBlobAsync()
+        public async Task<List<string>> GetAllContainersAndBlobAsync()
         {
-            throw new NotImplementedException();
+            List<string> containerAndBlob = new List<string>();
+            containerAndBlob.Add("Account Name - " + _blobClient.AccountName);
+
+            await foreach(BlobContainerItem blobContainerItem in _blobClient.GetBlobContainersAsync())
+            {
+                containerAndBlob.Add("**************************"+ blobContainerItem.Name + " *****************************************************");
+                containerAndBlob.Add("--" + blobContainerItem.Name);
+                BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(blobContainerItem.Name);
+
+                await foreach(BlobItem blobItem in blobContainerClient.GetBlobsAsync())
+                {
+                    containerAndBlob.Add("--- " + blobItem.Name);
+                }
+                containerAndBlob.Add("*******************************************************************************");
+            }
+            return containerAndBlob;
         }
 
         public async Task<List<string>> GetAllContainersAsync()

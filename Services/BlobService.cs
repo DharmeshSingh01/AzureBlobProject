@@ -1,8 +1,7 @@
 ﻿
-using AspNetCore;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.VisualBasic;
+
 
 namespace AzureBlobProject.Services
 {
@@ -18,8 +17,8 @@ namespace AzureBlobProject.Services
         {
             BlobContainerClient blobContainerClient = _blobServiceClient.GetBlobContainerClient(conatainerName);
             var blobClient = blobContainerClient.GetBlobClient(name);
-            return await blobClient.DeleteIfExistsAsync();
-
+            var result =await blobClient.DeleteAsync();
+            return result==null? false:true;
 
         }
 
@@ -39,9 +38,11 @@ namespace AzureBlobProject.Services
         public async Task<string> GetBlob(string blobName, string conainerName)
         {
             BlobContainerClient blobContainerClient = _blobServiceClient.GetBlobContainerClient(conainerName);
-            var blobClient= blobContainerClient.GetBlobClient(blobName);
-            return blobClient.Uri.AbsoluteUri;
+            var blobClient=   blobContainerClient.GetBlobClient(blobName);
+             var a= blobClient.Uri.AbsoluteUri;
+            return a;
         }
+        
 
         public async Task<bool> UploadBlobAsync(string name, IFormFile file, string containerName)
         {

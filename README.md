@@ -1,6 +1,6 @@
 # AzureBlobProject
 Containers and Blobs in Blob Storage 
-# What Will we learn
+# What will we learn
 1- CRUD operations on Blobs from .NET application
 
 2- CRUD operations on Containers from .NET Application
